@@ -1,0 +1,29 @@
+{
+  "name": "fabric-server-node",
+  "version": "1.0.0",
+  "description": "fabric cryptokit for node.js server.",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "fabric-ca-client": "^1.4.4",
+    "fabric-client": "^1.4.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/5sWind/fabric-server-node.git"
+  },
+  "keywords": [
+    "fabric-sdk-node"
+  ],
+  "author": "5sWind",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/5sWind/fabric-server-node/issues"
+  },
+  "homepage": "https://github.com/5sWind/fabric-server-node#readme"
+}

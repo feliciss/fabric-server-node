@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "fabric cryptokit for node.js server.",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "devDependencies": {
+    "fabric-ca-client": "^1.4.4",
     "fabric-client": "^1.4.4"
   },
   "scripts": {

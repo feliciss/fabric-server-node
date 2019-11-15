@@ -4,8 +4,8 @@ const FabricCAService = require('fabric-ca-client');
 const path = require("path");
 const fs = require('fs');
 
-// Channel for interacting with Hyperledger Fabric
-class Client {
+// Client for interacting with Hyperledger Fabric
+const Client = class {
 
     // construct a client
     constructor() {

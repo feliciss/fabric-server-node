@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const Client = require('../app/client');
 
-const path = require("path");
 const fs = require('fs');
 
 // the key and certificate for enabling https protocol
@@ -22,7 +21,7 @@ let proposalBytes;
 const client = new Client();
 
 // testing connection
-const url = 'http://localhost:7054'
+const url = 'https://localhost:7054'
 const enrollmentID = 'admin'
 const enrollmentSecret = 'adminpw'
 const profile = 'tls'
@@ -114,7 +113,7 @@ app.post('/sendSignedProposal', async (req, res) => {
     console.debug(filename);
 
     try {
-        const signatureBytes = Buffer.from(signature);
+        const signatureBytes = Buffer.from(signature, 'hex');
         const peer = channel.getPeer(peerAddress);
         const targets = [peer];
         const signedProposal = { signatureBytes, proposal_bytes: proposalBytes }

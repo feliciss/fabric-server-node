@@ -14,7 +14,7 @@ const peerCertPath = <your own peer cert path>
 const ordererCertPath = <your own orderer cert path>
 ```
 
-We assume that you are using the temporary test environment such as [fabric-sdk-node](https://github.com/hyperledger/fabric-sdk-node) project's `gulp run-end-to-end` command to prepare the test environment for this project.
+We assume that you are using the temporary test environment such as [fabric-sdk-node](https://github.com/hyperledger/fabric-sdk-node/tree/master) project's `gulp run-end-to-end` command to prepare the test environment for this project.
 
 Otherwise you need to replace the code for your own environment configuration. The code starting from line 24:
 

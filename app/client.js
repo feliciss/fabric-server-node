@@ -32,7 +32,12 @@ const Client = class {
     // setup channel by channel id
     setupChannel(channelId) {
         const channel = this._client.newChannel(channelId);
-        return channel;
+        this._client.channel = channel;
+    }
+
+    // get client channel
+    getChannel() {
+        return this._client.channel;
     }
 
     // setup peer by cert path, peer listen address, and peer name

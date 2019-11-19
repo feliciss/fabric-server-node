@@ -6,23 +6,33 @@ Hyperledger Fabric offline signing server built with Node.js and Express.js.
 
 ## Environment Guide
 
-To run this application server, you need to open serve.js and replace with your own Fabric CA certificate path as below lines:
+To run this application server, you need to open serve.js and replace with your own settings.
 
-```javascript
-// config from your ca
-const peerCertPath = <your own peer cert path>
-const ordererCertPath = <your own orderer cert path>
+On the client side, you need some inputs to serve the request, for example:
+
+### Setting up Fabric channel ID
+
+```bash
+Channel ID: <the unique id for the channel>, etc. mychannel
+```
+
+### Setting up Fabric peer or orderer
+
+```bash
+Certificate Path: <peer or orderer msp tlscacerts>, etc. .../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+Listen Address: <peer or orderer listen address>, etc. grpcs://localhost:7050
+Name: <the name of the peer or orderer>, etc. orderer.example.com
 ```
 
 We assume that you are using the temporary test environment such as [fabric-sdk-node](https://github.com/hyperledger/fabric-sdk-node/tree/master) project's `gulp run-end-to-end` command to prepare the test environment for this project.
 
-Otherwise you need to replace the code for your own environment configuration. The code starting from line 24:
+Otherwise you need to replace the code for your own environment configuration. The code starting from line 22:
 
 ```javascript
 // testing connection
 ```
 
-and line 39:
+and line 28:
 
 ```javascript
 // testing proposal

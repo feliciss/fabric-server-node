@@ -16,7 +16,6 @@ const privateKey = fs.readFileSync('../network/config/privateKey.key', 'utf8');
 const certificate = fs.readFileSync('../network/config/certificate.pem', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
-let channel;
 let proposalBytes;
 const client = new Client();
 
@@ -25,15 +24,6 @@ const url = 'https://localhost:7054'
 const enrollmentID = 'admin'
 const enrollmentSecret = 'adminpw'
 const profile = 'tls'
-const channelId = 'mychannel';
-
-// config from your ca
-const peerCertPath = '/Users/5swind/Downloads/gerrit/hyperledger/fabric-sdk-node/test/fixtures/crypto-material/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem';
-const peerListenAddress = 'grpcs://localhost:7051';
-const peerName = 'peer0.org1.example.com';
-const ordererCertPath = '/Users/5swind/Downloads/gerrit/hyperledger/fabric-sdk-node/test/fixtures/crypto-material/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem';
-const ordererListenAddress = 'grpcs://localhost:7050'
-const ordererName = 'orderer.example.com'
 
 // testing proposal
 const fcn = 'move'
@@ -41,6 +31,7 @@ const args = ['a', 'b', '100']
 const chaincodeId = 'end2endnodesdk'
 const mspId = 'Org1MSP'
 const peerAddress = 'localhost:7051'
+const channelId = 'mychannel';
 
 app.post('/requestCertificate', async (req, res) => {
     const csr = req.body.content;
@@ -73,19 +64,59 @@ app.post('/requestCertificate', async (req, res) => {
     }
 })
 
+app.get('/setupChannel', async (req, res) => {
+    const channelId = req.query.id;
+    console.debug(channelId);
+
+    try {
+        client.setupChannel(channelId);
+        res.status(200).send("channel setup success");
+    } catch (err) {
+        res.status(500).json({ error: err.toString() });
+    }
+})
+
+app.get('/setupPeer', async (req, res) => {
+    const peerCertPath = req.query.cert;
+    const peerListenAddress = req.query.address;
+    const peerName = req.query.name;
+    console.debug(peerCertPath);
+    console.debug(peerListenAddress);
+    console.debug(peerName);
+
+    try {
+        const peer = client.setupPeer(peerCertPath, peerListenAddress, peerName);
+        const channel = client.getChannel();
+        channel.addPeer(peer);
+        res.status(200).send("Successfully added peer to channel: " + channel._name);
+    } catch (err) {
+        res.status(500).json({ error: err.toString() });
+    }
+})
+
+app.get('/setupOrderer', async (req, res) => {
+    const ordererCertPath = req.query.cert;
+    const ordererListenAddress = req.query.address;
+    const ordererName = req.query.name;
+    console.debug(ordererCertPath);
+    console.debug(ordererListenAddress);
+    console.debug(ordererName);
+
+    try {
+        const orderer = client.setupOrderer(ordererCertPath, ordererListenAddress, ordererName);
+        const channel = client.getChannel();
+        channel.addOrderer(orderer);
+        res.status(200).send("Successfully added orderer to channel: " + channel._name);
+    } catch (err) {
+        res.status(500).json({ error: err.toString() });
+    }
+})
+
 app.post('/generateUnsignedProposal', async (req, res) => {
     const certPem = req.body.cert;
     console.debug(certPem);
 
     try {
-        channel = client.setupChannel(channelId);
-
-        const peer = client.setupPeer(peerCertPath, peerListenAddress, peerName);
-        const orderer = client.setupOrderer(ordererCertPath, ordererListenAddress, ordererName);
-
-        channel.addPeer(peer);
-        channel.addOrderer(orderer);
-
         const transactionProposalReq = {
             fcn: fcn,
             args: args,
@@ -93,6 +124,7 @@ app.post('/generateUnsignedProposal', async (req, res) => {
             channelId: channelId,
         };
 
+        const channel = client.getChannel();
         const { proposal, txId } = await channel.generateUnsignedProposal(transactionProposalReq, mspId, certPem);
         console.debug(proposal);
         console.debug(txId);
@@ -114,6 +146,7 @@ app.post('/sendSignedProposal', async (req, res) => {
 
     try {
         const signatureBytes = Buffer.from(signature, 'hex');
+        const channel = client.getChannel();
         const peer = channel.getPeer(peerAddress);
         const targets = [peer];
         const signedProposal = { signatureBytes, proposal_bytes: proposalBytes }

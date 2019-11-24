@@ -1,4 +1,4 @@
-# Fabric Server Node: Hyperledger Fabric server which serves for [Fabric Client Flutter](https://github.com/5sWind/fabric-client-flutter)
+# Fabric Server Node
 
 Hyperledger Fabric offline signing server built with Node.js and Express.js.
 
